@@ -48,7 +48,55 @@ pub fn hadamard<const N: usize>() -> Gate<N> {
     )
 }
 
-pub fn pauli_x<const N: usize>() -> Gate<N> {
+pub fn pauli_x<const N: usize>(target: usize) -> Gate<N> {
+    Gate::new(
+        (0..N)
+            .map(|i| {
+                (0..N)
+                    .map(|j| {
+                        let real = match i {
+                            _ if i == j && i == target => 0.0,
+                            _ if i == target => 1.0,
+                            _ => 0.0,
+                        };
+
+                        Complex::new(real, 0.0)
+                    })
+                    .collect::<Vec<_>>()
+                    .try_into()
+                    .unwrap()
+            })
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap(),
+    )
+}
+
+pub fn pauli_x_many<const N: usize>(targets: &[usize]) -> Gate<N> {
+    Gate::new(
+        (0..N)
+            .map(|i| {
+                (0..N)
+                    .map(|j| {
+                        let real = match i {
+                            _ if i == j && targets.contains(&i) => 0.0,
+                            _ if targets.contains(&i) => 1.0,
+                            _ => 0.0,
+                        };
+
+                        Complex::new(real, 0.0)
+                    })
+                    .collect::<Vec<_>>()
+                    .try_into()
+                    .unwrap()
+            })
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap(),
+    )
+}
+
+pub fn pauli_x_all<const N: usize>() -> Gate<N> {
     Gate::new(
         (0..N)
             .map(|i| {

@@ -9,7 +9,7 @@ fn main() {
     let hadamard = gate::hadamard();
     let cnot = gate::cnot(0, 1);
     let toffoli = gate::toffoli(0, 1, 2);
-    let pauli_x = gate::pauli_x();
+    let pauli_x = gate::pauli_x_many(&[0, 2]);
 
     dbg!(register);
     register.apply(&hadamard);
